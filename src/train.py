@@ -12,14 +12,11 @@ from tensorflow.keras import backend as K
 from tensorflow.keras.callbacks import TensorBoard, ModelCheckpoint, EarlyStopping
 from tensorflow.keras import optimizers
 from tensorflow.keras.models import Sequential, model_from_json, save_model, load_model
-
 from sklearn.metrics import classification_report, confusion_matrix
-
 
 class ImageClassifier:
   def __init__(self, args):
     self.args = args
-
     if not os.path.isdir(args.model_dir):
       os.makedirs(args.model_dir)
 
@@ -62,7 +59,6 @@ class ImageClassifier:
     model.add(Dense(64, activation='relu'))
     model.add(Dense(50, activation='relu'))
     model.add(Dense(self.args.no_class, activation='softmax'))
-
     return model
 
   def read_convert_image(self, img_path, label):
@@ -86,8 +82,7 @@ class ImageClassifier:
     if self.args.resize:
       image_data = tf.image.resize_images(image_data, [self.args.image_size, self.args.image_size])
     
-    one_hot_label = tf.one_hot(label, self.args.no_class)
-    
+    one_hot_label = tf.one_hot(label, self.args.no_class)  
     return image_data, one_hot_label
  
   # Random hue, brightness, contrast and saturation 
@@ -176,7 +171,6 @@ class ImageClassifier:
   # Evaluvate on test data / predict
   def evaluvate_predict(self):
     K.set_learning_phase(0)
-
     # If required to load weights and re-initiaze model, uncomment this block
     '''json_file = open(self.args.model_json, 'r')
     model_json = json_file.read()
@@ -237,7 +231,6 @@ class ImageClassifier:
 
 def parse_arguments(argv):
   parser = argparse.ArgumentParser()
-
   # input parameters
   parser.add_argument('--data_dir', type=str, help='Path to the directory contains train images', default='../data/train_val')
   parser.add_argument('--seed', type=int, help='Random seed.', default=666)
@@ -285,7 +278,6 @@ def parse_arguments(argv):
 
 if __name__ == "__main__":
   args = parse_arguments(sys.argv[1:])
-
   classify_object = ImageClassifier(args)
   if args.mode == 'train':
     # create a filenames, labels list
@@ -305,6 +297,4 @@ if __name__ == "__main__":
     classify_object.init_predict(test_dataset,class_indices)
     classify_object.evaluvate_predict()
   else:
-    print('unknown mode')
-
- 
+    print('unknown mode') 
